@@ -45,6 +45,9 @@ app.post('/add', function(요청, 응답){
     });      
 });
 
+//글 번호 달기
+
+
 //서버에서 .html 말고 .ejs 파일 보내기
 app.get('/list',function(요청, 응답){
     //db에 저장된 모든 데이터 가져오기, 메타데이터 포함.
