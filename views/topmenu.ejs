@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">나의 할 일 첫 화면</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <% if(!user){ %>
+              <a class="nav-link active" aria-current="page" href="/login">Login</a>
+            <% } else { %>
+              <p>환영합니다 <%= user.displayName %></p>
+                <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
+            <% } %>
+            <!-- <a class="nav-link active" aria-current="page" href="/login">로그인 / 회원가입</a> -->
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/mytodo">나의 할 일</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/write">할 일 쓰기</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/write">내 정보 수정</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="/list">내 할 일 공유</a>
+          </li> -->
+          <!-- <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/mypage" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              나의 정보
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/mypage">정보 수정</a></li>
+              <li><a class="dropdown-item" href="/mytodo">나의 할 일/a></li>
+              <li><a class="dropdown-item" href="/mypage">내가 응원한 할 일</a></li>
+            </ul>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+</nav>

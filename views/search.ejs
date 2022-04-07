@@ -20,7 +20,7 @@
 
     <div class="container input-group mb-2">
       <input class="form-control" id="search-input">
-      <button class="input-group-append btn btn-danger" id="search">검색</button>
+      <button class="btn btn-outline-primary" id="search">검색</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -38,7 +38,7 @@
 
     <div class="container">
     <ul class="list-group">
-        <a href="/list"><button class="input-group-append btn btn-danger" >검색 취소</button></a>
+        <a href="/mytodo"><button class="btn btn-outline-primary" >검색 취소</button></a>
       <% for (var i = 0; i < posts.length; i++){ %>
       <li class="list-group-item">
         <h6>글번호 : <%= posts[i]._id %></h6>

@@ -10,7 +10,7 @@
     <!--public CSS-->
     <link rel="stylesheet" href="/public/main.css"> 
 
-    <title>Hello, world!</title>
+    <title>정보 수정</title>
   </head>
   <body>
 
@@ -18,10 +18,37 @@
 
       
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+      var pw = $("#pw").val();
+      var pwa = $("#pw_a").val();
+  
+      if (pw!==pwa) alert("비밀번호가 일치하지 않습니다.");
+    </script>
     
-    <%= 사용자.id %> 님 반갑습니다.
-    마이페이지입니다
+    
 
+
+
+    <h4 class="container mt-4 text-center"><strong>    <%= 사용자.id %> 님 회원 정보 수정 </strong></h4>
+    <div class="container mt-3" style="width: 50%;">
+      <form action="/mypage?_method=PUT" method="POST">
+        <div class="form-group">
+          <label>이메일 <%= 사용자.email %></label>
+          <input type="email" value="<%= 사용자.email %>" class="form-control" name="email">
+        </div>
+        <div class="form-group">
+          <label>비밀번호</label>
+          <input id="pw" type="password" class="form-control" name="pw">
+        </div>
+        <div class="form-group">
+          <label>비밀번호 재확인</label>
+          <input id="pw_a" type="password" class="form-control" name="pwAgain">
+        </div><br>
+        <button type="submit" class="btn btn-outline-secondary">정보 수정</button>
+        
+      </form>
+    </div>
+  
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
