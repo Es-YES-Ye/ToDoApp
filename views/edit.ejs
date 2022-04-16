@@ -17,14 +17,15 @@
 
   <div class="container mt-3">
     <form action="/edit?_method=PUT" method="POST">
+      <input type="text" value="<%= post._id %>" name="postid" style="display: none;">
       <div class="form-group">
         <label>할 일</label>
-        <input type="text" value="<%= post.제목 %>" name="id" style="display: none;">
         <input value="<%= post.제목 %>" type="text" class="form-control" name="title">
       </div>
       <div class="form-group">
         <label>마감 날짜</label>
-        <input value="<%= post.날짜 %>" type="text" class="form-control" name="date">
+        <input type="date" value="<%= post.날짜 %>" id="datePicker" class="form-control" value="2022-04-01" placeholder="마감 날짜를 선택하세요." name="date" required/>
+        <!--<input value="<%= post.날짜 %>" type="text" class="form-control" name="date">-->
       </div>
       <div class="form-group">
         <label>우선 순위 (이전 선택 : <%= post.우선순위 %> )</label><br>
@@ -45,7 +46,7 @@
         <label>메모</label>
         <input value="<%= post.메모 %>" type="textarea" class="form-control" name="memo">
       </div>
-      <button type="submit" class="btn btn-outline-secondary">수정</button>
+      <button type="submit" class="btn btn-outline-secondary"data-id="<%= post._id %>">수정</button>
     </form>
   </div>
 

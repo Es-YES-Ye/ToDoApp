@@ -41,12 +41,26 @@
         <a href="/mytodo"><button class="btn btn-outline-primary" >검색 취소</button></a>
       <% for (var i = 0; i < posts.length; i++){ %>
       <li class="list-group-item">
-        <h6>글번호 : <%= posts[i]._id %></h6>
-        <a href="/detail"><h4> To DO : <%= posts[i].제목 %> </h4></a>
-        <p> 마감 날짜 : <%= posts[i].날짜 %> </p>
-        <button class="btn btn-outline-primary delete" data-id="<%= posts[i]._id %>">삭제</button>
-        <button class="btn btn-outline-primary edit" data-id="<%= posts[i]._id %>">수정</button>
-      </li>
+        <h4> 할 일 : <%= posts[i].제목 %> </h4>
+
+        <% if ( posts[i].완료  == true) { %>
+         <p> 완료 </p>
+         <% } %>
+         <% if ( posts[i].완료  == false) { %>
+          <p> 진행 중 </p>
+          <% } %>
+    <!--  <p> 공개 : <%= posts[i].공개 %> </p> -->
+    <p> 날짜 : <%= posts[i].날짜 %> </p>
+    <p> 우선순위 : <%= posts[i].우선순위 %> </p>
+      <p> 메모 : <%= posts[i].메모 %> </p>
+      <button class="btn btn-outline-primary delete" data-id="<%= posts[i]._id %>">삭제</button>
+      <!-- <button class="btn btn-outline-primary edit" data-id="<%= posts[i]._id %>"">수정</button> -->
+      <button class="btn btn-outline-primary edit" onclick="location.href='/edit/<%= posts[i]._id %>'">수정하기</a></button> 
+      <% if ( posts[i].완료  == false) { %>
+      <button class="btn btn-outline-primary complete" onclick="location.href='/complete'" data-id="<%= myposts[i]._id %>"">할 일 완료</button>
+      <% } %>
+    </li>
+
       <% } %>
     </ul>
   </div>

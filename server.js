@@ -17,8 +17,9 @@ const bcrypt = require('bcrypt');
 const req = require('express/lib/request');
 const flash = require('connect-flash/lib/flash');
 const saltRounds =10;
+const nodemailer = require('nodemailer');
 // const cookieParser = require('cookie-parser');
-const { OAuth2Client} = require('google-auth-library')
+
 
 // app.use(cookieParser());
 app.use(session({
@@ -48,102 +49,28 @@ MongoClient.connect(process.env.DB_URL, function(err, client){
 
 // //첫화면
 app.get('/', function(요청, 응답) { 
+
+    console.log('파람',요청.params);
+
     //날씨 가져오기
     const request = require('request');
     request(
-        'http://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=996f8e9dae4b1ac2ef299f3df90b96a7&units=metric&lang={kr}', 
+        'http://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=&units=metric&lang={kr}', 
     function (error, res, body) {
         const data = JSON.parse(body)
         if(res.statusCode === 200)
     {
         console.log(data.weather)
-        응답.render('index.ejs' ,{ weather : data.weather[0].description, icon : data.weather[0].icon});
+        응답.render('index.ejs' ,{ weather : data.weather[0].description, icon : data.weather[0].icon, 사용자 : 요청.params});
         // 응답.send(data.list[1].weather[0].description)
         console.log('날씨')
+    }
+    if(error){
+        console.log(error)
     }
     });
 });
 
-// app.get('/', function(요청, 응답) { 
-// function getWeather(lat, lon) {
-//     let WEATHER_URL = `    'http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=996f8e9dae4b1ac2ef299f3df90b96a7&units=metric&lang={kr}', `
-
-//     if (location.protocol === 'http:') {
-//         WEATHER_URL = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang={kr}`
-//     } else {
-//         WEATHER_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang={kr}`
-//     }
-//     fetch(WEATHER_URL)
-//         .then(function (response) {
-//             return response.json();
-//         })
-//         .then(function (json) {
-//             const description = json.weather[0].description;
-//             const icon = json.weather[0].icon;
-//             const temperature = json.main.temp;
-//             const currentLocation = json.name;
-//             const humidity = json.main.humidity;
-//             const errorCode = json.cod;
-//             if (errorCode === "401") {
-//                 iconSelect.setAttribute("src", "icons/unknown.png")
-//                 Weather__description.innerText = `???`;
-//                 weather__temperature.innerText = "-℃"
-//                 Weather__location.innerText = "지구 어딘가";
-//                 Weather__humidity.innerText = "API 불러오기 실패"
-//             } else {
-//                 iconSelect.setAttribute("src", `icons/${icon}.png`);
-//                 Weather__description.innerText = `${description}`;
-//                 weather__temperature.innerText = `${temperature.toFixed(1)}℃`;
-//                 Weather__location.innerText = `${currentLocation}`;
-//                 Weather__humidity.innerText = `${humidity}%`;
-//             }
-//         });
-// }   응답.render('index.ejs');
-// // 응답.send(data.list[1].weather[0].description)
-// console.log('날씨')
-// });
-
-
-
-//첫화면에 들어갈 날씨
-function saveCoord(coordObj) {
-    sessionStorage.setItem("coords", JSON.stringify(coordObj))
-}
-
-function handleGeoSuccess(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    const coordObj = {
-        latitude,
-        longitude
-    };
-    saveCoord(coordObj);
-    getWeather(latitude, longitude);
-}
-
-function handleGeoError() {
-    iconSelect.setAttribute("src", "icons/unknown.png")
-    Weather__description.innerText = `???`;
-    weather__temperature.innerText = "-℃"
-    Weather__location.innerText = "지구 어딘가";
-    Weather__humidity.innerText = "위치모름"
-}
-
-function getGeolocation() {
-    navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError, {
-        enableHighAccuracy: true
-    });
-}
-
-function loadCoord() {
-    const loadedCoords = sessionStorage.getItem("coords");
-    if (loadedCoords === null) {
-        getGeolocation();
-    } else {
-        const parsedCoords = JSON.parse(loadedCoords);
-        getWeather(parsedCoords.latitude, parsedCoords.longitude);
-    }
-}
 
 //회원정보 암호화
 passport.serializeUser(function (user, done) {
@@ -219,31 +146,38 @@ app.get('/fail', function(요청, 응답){
 
 //indexaflogin페이지 뿌리기
 app.get('/indexaflogin', function(요청, 응답){
-    응답.render('indexaflogin.ejs')
+        //날씨 가져오기
+        const request = require('request');
+        request(
+            'http://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=&units=metric&lang={kr}', 
+        function (error, res, body) {
+            const data = JSON.parse(body)
+            if(res.statusCode === 200)
+        {
+            console.log(data.weather)
+            응답.render('indexaflogin.ejs' ,{ weather : data.weather[0].description, icon : data.weather[0].icon, 사용자 : 요청.params});
+            // 응답.send(data.list[1].weather[0].description)
+            console.log('날씨')
+        }
+        if(error){
+            console.log(error)
+        }
+        });
+
 })
 
+
 //구글 로그인
-app.get('/google',
-  passport.authenticate('google', { scope: ['profile'] })
-);
-
-app.get('/google/callback',
-  passport.authenticate('google'), authSuccess
-);
-
-function authSuccess(요청, 응답) {
-  res.redirect('/');
-}
-
-const client = new OAuth2Client('377440299722-1aijp8b4qu54h1jnjkhq2u1igblk6rt6.apps.googleusercontent.com')
-const clientsecret = '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'
-
+const { OAuth2Client} = require('google-auth-library')
 var GoogleStrategy   = require('passport-google-oauth2').Strategy;
+var GOOGLE_CLIENT_ID = ''
+var GOOGLE_SECRET = ''
+
 passport.use(new GoogleStrategy(
     {
-      clientID      : client,
-      clientSecret  : clientsecret,
-      callbackURL   : 'http://localhost:8888/auth/google/callback',
+      clientID      : GOOGLE_CLIENT_ID,
+      clientSecret  : GOOGLE_SECRET,
+      callbackURL   : '/login',
       passReqToCallback   : true
     }, function(request, accessToken, refreshToken, profile, done){
       console.log('profile: ', profile);
@@ -252,19 +186,7 @@ passport.use(new GoogleStrategy(
       done(null, user);
     }
   ));
-
-  //구글 로그인 화면
-  app.get('/auth/google',
-  passport.authenticate('google', { scope:
-  	[ 'email', 'profile' ] }
-));
-
-//구글 로그인 성공과 실패 리다이렉트
-app.get( '/auth/google/callback',
-	passport.authenticate( 'google', {
-		successRedirect: '/auth/google/success',
-		failureRedirect: '/auth/google/failure'
-}));
+  
 
 //로그아웃
 app.get('/logout', function(요청,응답){
@@ -274,13 +196,6 @@ app.get('/logout', function(요청,응답){
         응답.redirect('/');
     })
 })
-
-//로그인 or 로그아웃 상태에 따른 버튼 생성
-const getBtn = (user) =>{
-    return user !== undefined ? `${user.name} | <a href="/auth/logout">logout</a>` : `<a href="/auth/google">Google Login</a>`;
-}
-
-
 
 
 //마이페이지 뿌릴 때 로그인여부 확인하는 함수
@@ -300,6 +215,7 @@ app.get('/mypage', 로그인했니, function(요청, 응답){
 
 //마이 페이지 내 정보 수정에 데이터 뿌리기 
 app.get('/mypage/:id', function(요청, 응답) {
+    console.log('주소파람',요청.params.id)
     db.collection('login').findOne({id : parseInt(요청.params.id)},function(에러, 결과){
         if(에러){return console.log(에러)};
         console.log(결과);
@@ -310,11 +226,13 @@ app.get('/mypage/:id', function(요청, 응답) {
 //마이 페이지 내정보수정
 app.put('/mypage', function(요청, 응답){
    
-    var 수정할데이터 = {id : 요청.body.id}
-   
+    var 수정할데이터 = {id : 요청.user}
+    console.log('인풋',요청.body.id)
+    console.log('mypage수정할데이터', 수정할데이터)
+
     if(db.collection('login').findOne({id : 요청.body.id})){
         bcrypt.hash(요청.body.pw, saltRounds, function (err, hash) {
-           db.collection('login').updateOne(수정할데이터,{ $set : {email : 요청.body.email, pw : hash} },function(에러, 결과){
+           db.collection('login').updateOne({id : 요청.user.id},{ $set : {email : 요청.body.email, pw : hash} },function(에러, 결과){
             if(에러){return console.log(에러)};
             console.log(결과);
             console.log('회원 정보 수정 완료');
@@ -394,7 +312,7 @@ app.get('/mytodo', 로그인했니, function(요청, 응답){
     console.log(요청.user);
     if(요청.user.id){
         db.collection('post').find({작성자 : 요청.user.id, 완료 : false}).toArray(function(에러, 결과){
-            console.log('db에서 작성자 찾은 결과')
+            console.log('db에서 작성자 찾은 결과-mytodo')
             console.log(결과);
             console.log('아이디')
             console.log(요청.user.id);
@@ -413,7 +331,7 @@ app.get('/allmytodo', 로그인했니, function(요청, 응답){
     console.log(요청.user.id);
     if(요청.user.id){
         db.collection('post').find({작성자 : 요청.user.id}).toArray(function(에러, 결과){
-            console.log('db에서 작성자 찾은 결과')
+            console.log('db에서 작성자 찾은 결과-allmytodo')
             console.log(결과);
             console.log('아이디')
             console.log(요청.user.id);
@@ -424,7 +342,8 @@ app.get('/allmytodo', 로그인했니, function(요청, 응답){
     } else{
         console.log(요청.user.id);
         console.log(요청.login.id);
-        응답.send("<script>alert('로그인이 필요합니다.'); window.location.replace('/login');</script>");    }
+        응답.send("<script>alert('로그인이 필요합니다.'); window.location.replace('/login');</script>");    
+    }
 })
 
 
@@ -441,33 +360,31 @@ app.put('/complete', function(요청,응답){
         console.log('할 일 완료');
         console.log(요청.body._id)
         console.log(요청.user._id)
-        응답.send("<script>alert('할 일 완료! 축하합니다!'); window.location.replace('/mytodo');</script>");    
+        응답.send("<script>alert('할 일 완료! 축하!'); window.location.replace('/mytodo');</script>"); 
     })
 });
 
-//할 일 이메일 보내기
-app.get('/sendemail', function(요청, 응답){
-    응답.render('sendemail.ejs', {user: 요청.user})
+app.get('/complete', function(요청, 응답){
+    응답.send("<script>alert('할 일 완료! 축하!'); window.location.replace('/mytodo');</script>"); 
 })
-
 //MyToDo에서 공유중인 toDo만 보기
 
 
 //삭제 버튼 누르면 글 삭제
 app.delete('/delete', function(요청, 응답){
     console.log('삭제 버튼 클릭');
-    console.log(요청.body); //delete 요청할 때 같이 보낸 데이터
-    요청.body._id = parseInt(요청.body._id); //'1'이라는 문자를 정수로 변환
+    console.log('삭제 글번호', 요청.body._id)
+    console.log('작성자', 요청.user.id)
     //요청.body에 담긴 게시물 번호에 따라 DB에서 게시물 삭제
     
-    var 삭제할데이터 = {_id : 요청.body._id, 작성자 : 요청.user._id}
+    var 삭제할데이터 = {_id : parseInt(요청.body._id), 작성자 : 요청.user.id}
+    console.log('삭제할데이터', 삭제할데이터)
 
     db.collection('post').deleteOne(삭제할데이터, function(에러, 결과){
         if(에러){return console.log(에러)};
         //delete 성공했을 때 
         console.log('삭제 완료');
-        if(에러) {console.log(애러)}
-        if(결과) {console.log(결과)}
+        console.log(결과)
         응답.status(200).send({message : '성공했습니다.'});
     })
 });
@@ -475,25 +392,74 @@ app.delete('/delete', function(요청, 응답){
 
 //수정 버튼 눌렀을 때 글 수정
 app.put('/edit', function(요청, 응답){
-    요청.body._id = parseInt(요청.body._id); //'1'이라는 문자를 정수로 변환
-    //요청.body에 담긴 게시물 번호에 따라 DB에서 게시물 삭제
+    console.log('수정버튼눌렀을때 그냥 edit')
+    console.log('글수정데이터전송', 요청.body)
+    console.log('인풋',요청.body.postid)
     
-    var 수정할데이터 = {_id : 요청.body._id, 작성자 : 요청.user._id}
+    var 수정할데이터 = {_id : parseInt(요청.body.postid), 작성자 : 요청.user.id}
+    var 수정내용 =  {제목 : 요청.body.title, 날짜 : 요청.body.date, 우선순위 : parseInt(요청.body.priority), 메모 : 요청.body.memo}
 
-    db.collection('post').updateOne(수정할데이터,{ $set : {제목 : 요청.body.title, 날짜 : 요청.body.date, 우선순위 : parseInt(요청.body.priority), 메모 : 요청.body.memo} },function(에러, 결과){
+    db.collection('post').updateOne(수정할데이터,{ $set : 수정내용},function(에러, 결과){
         if(에러){return console.log(에러)};
-        console.log('수정 완료');
-        console.log(결과);
-        console.log(요청.body.title)
+        console.log('수정 완료! 결과', 결과);
         응답.send("<script>alert('수정 완료되었습니다.'); window.location.replace('/mytodo');</script>");    
     })
 });
 
 //글 수정 페이지에 데이터 뿌리기 
 app.get('/edit/:id', function(요청, 응답) {
-    db.collection('post').findOne({작성자 : parseInt(요청.params.id)},function(에러, 결과){
+    console.log('아이디', 요청.user.id)
+    console.log('글번호', 요청.params.id)
+
+    db.collection('post').findOne({_id : parseInt(요청.params.id)},function(에러, 결과){
         if(에러){return console.log(에러)};
-        console.log(결과);
+        console.log('데이터뿌리기', 결과)
         응답.render('edit.ejs', {post : 결과}); 
     });
+});
+
+
+
+//이메일보내기
+app.get('/email', function(요청, 응답){
+    db.collection('post').find({작성자 : 요청.user.id, 완료 : false}).toArray(function(에러, 결과){
+        console.log('이메일버튼 db에서 작성자 찾은 결과-mytodo')
+        
+        function db내용(){
+        var 할일목록 = [];
+        for(var i=0; i<결과.length; i++){
+
+            할일목록.push('우선 순위 : ' + 결과[i].우선순위);
+            할일목록.push('마감 날짜 : ' + 결과[i].날짜);
+            할일목록.push('제목 : ' + 결과[i].제목);
+            할일목록.push('메모 : ' + 결과[i].메모);
+        }
+        return 할일목록;
+    };
+    console.log('함수로', db내용());
+    var 파싱 = JSON.stringify(db내용(), null, 4);
+    console.log('파싱', 파싱);
+
+    //보내는 사람 이메일 계정
+    const transporter = nodemailer.createTransport({ 
+        service: 'gmail', 
+        port: 465, 
+        secure: true, // true for 465, false for other ports 
+        auth: { // 이메일을 보낼 계정 데이터 입력 
+            user: emailaddr, 
+            pass: pw, 
+        }, 
+    }); 
+
+    //받는 사람 이메일 주소와 할 일 내용 보내기
+    const emailOptions = { // 옵션값 설정 
+        from: '오늘, 할 일', 
+        to: 요청.user.email, 
+        subject: '오늘 할 일, 리스트입니다.', 
+        html: "<h1> 오늘, 할 일 </h1><br><br><h3>오늘까지 진행 중인 할 일 리스트입니다.</h3> <br><br>" 
+        + 파싱 + "<br><br>", }; 
+        
+        transporter.sendMail(emailOptions); //전송
+    응답.send("<script>alert('이메일이 전송되었습니다.'); window.location.replace('/mytodo');</script>");    
+});    
 });

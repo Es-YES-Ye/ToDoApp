@@ -11,27 +11,37 @@
     <title>나의 할 일</title>
   </head>
   <body>
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <ul class="nav justify-content-center">
       <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="/">나의 할 일 첫 화면</a>
       </li>
     </ul>
-    
-    <!-- <div class="card" style="width: 50%;" text-align: center;>
-      <img src="public\pics\ocean.jpg" class="card-img-top" text-align: center;>
-      <div class="card-body" text-align: center;>
-        <p class="card-text">나 자신에게 더욱 집중하라. <br> 언제나 나를 1순위에 두어라.</p>
-      </div> -->
       <ul class="nav justify-content-center">
         <li class="nav-item">
           오늘 날씨 <%= weather %>
         </li>
       </ul>
+        <div>
+          테스트용
+          <% if ( 사용자 === null) { %>
+            <button class="btn btn-outline-primary complete" onclick="location.href='/complete'" data-id="<%= myposts[i]._id %>">할 일 완료</button>
+          <% } %>
+        
+          <% if ( 사용자 === false) { %>
+            <button class="btn btn-outline-primary complete" onclick="location.href='/complete'" data-id="<%= myposts[i]._id %>">완료</button>
+          <% } %>
+          <% if ( !사용자 ) { %>
+            <button class="btn btn-outline-primary complete" onclick="location.href='/complete'" data-id="<%= myposts[i]._id %>">완</button>
+          <% } %>
+        </div>
       
 
-<div class="flex-container">
-  <div class="quotebox">
-    <h2 class="btn btn-primary disabled placeholder col-4" style="width: 50%;" text-align: center;>오늘의 명언</h2> 
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<div class="flex-container" >
+  <div class="quotebox" style="width: 60%;">
+    <h2 class="btn btn-primary disabled placeholder col-4" style="width: 30%;" text-align: center;>오늘의 명언</h2> 
     <br>
     <div class="row">
       <div class="col-sm-6">
@@ -39,6 +49,7 @@
           <div class="card-body">
             <strong><h5 class="card-title">아인슈타인</h5></strong>
             <p class="card-text">어제와 똑같이 살면서 다른 미래를 기대하는 것은 정신병 초기 증상이다.</p>
+
             <a href="/login" class="btn btn-primary">로그인 하기</a>
           </div>
         </div>
@@ -59,7 +70,6 @@
 
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <style>
 
   .flex-container{

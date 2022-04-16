@@ -6,6 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <title>로그인</title>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <meta name="google-signin-client_id" content="377440299722-1aijp8b4qu54h1jnjkhq2u1igblk6rt6.apps.googleusercontent.com">
 </head>
 <body>
   
@@ -27,11 +29,16 @@
         <label>비밀번호</label>
         <input type="password" class="form-control" name="pw" required>
       </div>
-     <button type="submit" class="btn btn-outline-secondary">로그인</button>  
+      <button type="submit" class="btn btn-outline-secondary">로그인</button>
     </form>
-    <a href="google"><button class="btn btn-outline-secondary"><img src="public\pics\googlelogo.png">구글 로그인</button></a>
+    <span id="GgCustomLogin">
+      <a href="javascript:void(0)">
+        <div class="g-signin2" data-onsuccess="onSignIn">구글</div>      
+      </a>
+    </span>
   </div>
 
+  
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script>
@@ -39,6 +46,42 @@
     var pwa = $("#pw_a").val();
 
     if (pw!==pwa) alert("비밀번호가 일치하지 않습니다.");
+
+
+    function init() {
+	gapi.load('auth2', function() {
+		gapi.auth2.init();
+		options = new gapi.auth2.SigninOptionsBuilder();
+		options.setPrompt('select_account');
+        // 추가는 Oauth 승인 권한 추가 후 띄어쓰기 기준으로 추가
+		options.setScope('email profile openid https://www.googleapis.com/auth/user.birthday.read');
+        // 인스턴스의 함수 호출 - element에 로그인 기능 추가
+        // GgCustomLogin은 li태그안에 있는 ID, 위에 설정한 options와 아래 성공,실패시 실행하는 함수들
+		gapi.auth2.getAuthInstance().attachClickHandler('GgCustomLogin', options, onSignIn, onSignInFailure);
+	})
+}
+
+function onSignIn(googleUser) {
+	var access_token = googleUser.getAuthResponse().access_token
+	$.ajax({
+    	// people api를 이용하여 프로필 및 생년월일에 대한 선택동의후 가져온다.
+		url: 'https://people.googleapis.com/v1/people/me'
+        // key에 자신의 API 키를 넣습니다.
+		, data: {personFields:'birthdays', key:'AIzaSyCrKzJFnfdVC7_oDjSoBCSoYLcbNlLBNkU', 'access_token': access_token}
+		, method:'GET'
+	})
+	.done(function(e){
+        //프로필을 가져온다.
+		var profile = googleUser.getBasicProfile();
+		console.log(profile)
+	})
+	.fail(function(e){
+		console.log(e);
+	})
+}
+function onSignInFailure(t){		
+	console.log(t);
+}
   </script>
   
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

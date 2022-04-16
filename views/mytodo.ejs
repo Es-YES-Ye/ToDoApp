@@ -26,11 +26,11 @@
     </div>
     <br>
     <div class="container">
-    <button class="btn btn-outline-primary all" onclick="location.href='/allmytodo';">완료한 할 일까지 함께 보기</button>
-    <button class="btn btn-outline-primary all" onclick="location.href='/sendemail'">진행 중인 할 일 이메일로 보내기</button>
+    <button class="btn btn-outline-primary all" onclick="location.href='/allmytodo'">완료한 할 일까지 함께 보기</button>
+    <button class="btn btn-outline-primary all" onclick="location.href='/mytodo'">진행 중인 할 일만 보기</button>
+    <button class="btn btn-outline-primary all" onclick="location.href='/email'" data-id="<%= user.id %>">진행 중인 할 일 이메일로 보내기</button>
     </div>
     <br>
-
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
@@ -58,9 +58,9 @@
         <p> 메모 : <%= myposts[i].메모 %> </p>
         <button class="btn btn-outline-primary delete" data-id="<%= myposts[i]._id %>">삭제</button>
         <!-- <button class="btn btn-outline-primary edit" data-id="<%= myposts[i]._id %>"">수정</button> -->
-        <button class="btn btn-outline-primary edit" onclick="location.href='/edit/<%= myposts[i]._id %>'">수정하기</a></button> 
+        <button class="btn btn-outline-primary edit" onclick="location.href='/edit/<%= myposts[i]._id %>'"data-id="<%= myposts[i]._id %>">수정하기</a></button> 
         <% if ( myposts[i].완료  == false) { %>
-        <button class="btn btn-outline-primary complete" onclick="location.href='/complete'" data-id="<%= myposts[i]._id %>"">할 일 완료</button>
+        <button class="btn btn-outline-primary complete" onclick="location.href='/complete'" data-id="<%= myposts[i]._id %>">할 일 완료</button>
         <% } %>
       </li>
       <% } %>
