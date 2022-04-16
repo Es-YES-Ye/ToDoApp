@@ -1,6 +1,6 @@
 # 할 일, 웹 어플리케이션
-![첫화면](https://user-images.githubusercontent.com/96801244/163691420-22025bdd-3efa-4efd-9775-bb06f625048e.gif)
 
+![Uploading 첫화면.gif…]()
 
 # 프로젝트 의도?
 프론트엔드와 백엔드 기술을 모두 경험해볼 수 있는 Node.js를 공부하는 것에 의미를 두며 시작된 프로젝트입니다. 
