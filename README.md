@@ -7,8 +7,7 @@
 할 일을 작성하고, 완료된 할 일과 진행 중인 할 일을 모아볼 수 있고, 진행 중인 할 일을 이메일로 보낼 수 있는 웹 어플리케이션입니다.
 
 # 사용된 기술 스택
-node.js + express
-mongoDB
+node.js / express / mongoDB / jquery ajax
 
 # 주요 기능
 1. 로그인 후, 할 일 작성
