@@ -13,6 +13,6 @@ node.js / express / mongoDB / jquery ajax
 1. 로그인 후, 할 일 작성
 2. 완료된 할 일, 진행 중인 할 일 모아 보기
 3. 진행 중인 할 일 이메일로 받아보기
-
+4. 할 일 검색하기
 
 ![첫페이지](https://user-images.githubusercontent.com/96801244/162608552-0a78e25e-d213-40e8-9e67-7bb916ec2529.png)
